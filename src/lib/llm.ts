@@ -1,3 +1,5 @@
+import { GoogleGenAI } from '@google/genai';
+
 export async function callLLM(systemPrompt: string, userPrompt: string): Promise<string> {
   const apiKey = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
 
@@ -5,42 +7,43 @@ export async function callLLM(systemPrompt: string, userPrompt: string): Promise
     throw new Error('NO_API_KEY');
   }
 
-  // 1. Try Gemini API if GEMINI_API_KEY is present
+  // 1. Try Official Google Gen AI SDK if GEMINI_API_KEY is present
   if (process.env.GEMINI_API_KEY) {
-    const geminiKey = process.env.GEMINI_API_KEY;
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`;
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+      const promptText = `${systemPrompt}\n\n${userPrompt}`;
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [
-          {
-            role: 'user',
-            parts: [
-              { text: `${systemPrompt}\n\n${userPrompt}` }
-            ]
+      let response;
+      try {
+        response = await ai.models.generateContent({
+          model: 'gemini-2.5-flash',
+          contents: promptText,
+          config: {
+            responseMimeType: 'application/json',
+            temperature: 0.2
           }
-        ],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.2
-        }
-      })
-    });
+        });
+      } catch (firstModelError) {
+        // Fallback to gemini-2.0-flash or gemini-1.5-flash if 2.5-flash is not available in region/tier
+        response = await ai.models.generateContent({
+          model: 'gemini-2.0-flash',
+          contents: promptText,
+          config: {
+            responseMimeType: 'application/json',
+            temperature: 0.2
+          }
+        });
+      }
 
-    if (!res.ok) {
-      const errorText = await res.text();
-      console.warn(`[LLM Helper] Gemini API returned status ${res.status}: ${errorText}`);
-      throw new Error(`Gemini API HTTP Error ${res.status}`);
+      const rawText = response.text;
+      if (!rawText) {
+        throw new Error('Google Gen AI SDK returned an empty text response');
+      }
+      return rawText;
+    } catch (sdkError: any) {
+      console.warn(`[LLM Helper] Google Gen AI SDK Error:`, sdkError?.message || sdkError);
+      throw sdkError;
     }
-
-    const data = await res.json();
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!rawText) {
-      throw new Error('Gemini API returned an empty text response');
-    }
-    return rawText;
   }
 
   // 2. Fallback to OpenAI API if OPENAI_API_KEY is present

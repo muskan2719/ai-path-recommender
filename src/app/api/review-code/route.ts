@@ -41,12 +41,12 @@ export async function POST(request: Request) {
               : ['Ensure code fulfills target objective and includes necessary return logic.'])
           });
         }
-        console.warn('[review-code API] Live LLM response structure invalid. Falling back to mock evaluation.');
-      } catch (llmError) {
-        console.warn('[review-code API] Live LLM call failed or key invalid:', llmError);
+        console.error('❌ [review-code API Fallback Triggered] Live LLM response structure invalid or missing fields. Falling back to local evaluation.', { rawResponse });
+      } catch (llmError: any) {
+        console.error('❌ [review-code API Fallback Triggered] Live LLM call failed. Reason:', llmError?.message || llmError);
       }
     } else {
-      console.warn('[review-code API] GEMINI_API_KEY not detected. Using local syntax evaluation fallback.');
+      console.error('❌ [review-code API Fallback Triggered] GEMINI_API_KEY / OPENAI_API_KEY environment variable is not defined in process.env.');
     }
 
     // Local code snippet syntax & logic check fallback when API key is absent or LLM fails
