@@ -1,69 +1,232 @@
-import Image from "next/image";
+'use client';
+
+import React, { useState } from 'react';
+import { Cpu } from 'lucide-react';
+import { Dashboard } from '@/components/Dashboard';
+import { EmpathyBanner } from '@/components/EmpathyBanner';
+import { ChatInterface } from '@/components/ChatInterface';
+import { RoadmapVisualizer } from '@/components/RoadmapVisualizer';
+import { ChallengeModal } from '@/components/ChallengeModal';
+import { LearningRoadmap, LearningModule, InputMode } from '@/lib/types';
+import { JDParserOutput } from '@/lib/prompts/jdParserPrompt';
 
 export default function Home() {
+  const [roadmap, setRoadmap] = useState<LearningRoadmap | null>(null);
+  const [selectedModule, setSelectedModule] = useState<LearningModule | null>(null);
+  const [activeChallengeModule, setActiveChallengeModule] = useState<LearningModule | null>(null);
+  const [isChallengeModalOpen, setIsChallengeModalOpen] = useState<boolean>(false);
+  const [isBurnoutMode, setIsBurnoutMode] = useState<boolean>(false);
+  const [detectedKeyword, setDetectedKeyword] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const handleGenerateRoadmap = async (data: {
+    mode: InputMode;
+    goalText?: string;
+    jdText?: string;
+    parsedJd?: JDParserOutput;
+    detectedBurnout: boolean;
+    burnoutKeyword?: string;
+  }) => {
+    setIsLoading(true);
+    setDetectedKeyword(data.burnoutKeyword || null);
+    setIsBurnoutMode(data.detectedBurnout);
+
+    try {
+      if (data.mode === 'linkedin_jd' && data.parsedJd) {
+        // Construct roadmap directly from parsed LinkedIn Job Description
+        const parsed = data.parsedJd;
+        const generatedModules: LearningModule[] = parsed.learning_roadmap.map((mod, idx) => ({
+          id: `mod-${idx + 1}`,
+          title: mod.module_name,
+          description: mod.description,
+          estimatedMinutes: data.detectedBurnout ? 10 : 45,
+          isMicroTask: data.detectedBurnout,
+          status: idx === 0 ? 'unlocked' : 'locked',
+          gatekeeperChallenge: {
+            instruction: `Implement core logic for ${mod.module_name}. ${mod.description}`,
+            starterCode: `// Implementation for ${mod.module_name}\nexport function executeTask() {\n  // TODO: Add required logic\n  return {\n    success: true,\n    module: "${mod.module_name}"\n  };\n}`,
+            expectedOutcome: `Function returns valid object satisfying ${mod.module_name} requirements.`
+          }
+        }));
+
+        const newRoadmap: LearningRoadmap = {
+          id: `roadmap-jd-${Date.now()}`,
+          title: `Reverse-Engineered ${parsed.role_title} Mastery Path`,
+          targetRole: `${parsed.role_title} (${parsed.seniority_level})`,
+          inputMode: 'linkedin_jd',
+          skillsExtracted: [...parsed.core_skills, ...parsed.tech_stack],
+          createdAt: new Date().toISOString(),
+          modules: generatedModules
+        };
+
+        setRoadmap(newRoadmap);
+        setSelectedModule(generatedModules[0] || null);
+      } else {
+        // Fetch generated roadmap for standard goal mode
+        const res = await fetch('/api/generate-roadmap', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            mode: data.mode,
+            goalText: data.goalText,
+            jdText: data.jdText,
+            isBurnout: data.detectedBurnout
+          })
+        });
+
+        const result = await res.json();
+        if (result.success && result.roadmap) {
+          setRoadmap(result.roadmap);
+          const firstUnlocked = result.roadmap.modules.find((m: LearningModule) => m.status === 'unlocked');
+          setSelectedModule(firstUnlocked || result.roadmap.modules[0] || null);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to generate roadmap:', err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleGatekeeperPassed = (moduleId: string, unlockedNextId?: string) => {
+    if (!roadmap) return;
+
+    let targetUnlockId = unlockedNextId;
+
+    // Fallback: unlock next sequential module if unlockedNextId is not specified
+    if (!targetUnlockId) {
+      const currentIndex = roadmap.modules.findIndex((m) => m.id === moduleId);
+      if (currentIndex !== -1 && currentIndex + 1 < roadmap.modules.length) {
+        targetUnlockId = roadmap.modules[currentIndex + 1].id;
+      }
+    }
+
+    const updatedModules = roadmap.modules.map((mod) => {
+      if (mod.id === moduleId) {
+        return { ...mod, status: 'completed' as const };
+      }
+      if (mod.id === targetUnlockId && mod.status !== 'completed') {
+        return { ...mod, status: 'unlocked' as const };
+      }
+      return mod;
+    });
+
+    const updatedRoadmap: LearningRoadmap = {
+      ...roadmap,
+      modules: updatedModules
+    };
+
+    setRoadmap(updatedRoadmap);
+
+    // Auto-select unlocked next module
+    if (targetUnlockId) {
+      const nextMod = updatedModules.find((m) => m.id === targetUnlockId);
+      if (nextMod) {
+        setSelectedModule(nextMod);
+      }
+    }
+  };
+
+  const handleOpenChallenge = (mod: LearningModule) => {
+    setActiveChallengeModule(mod);
+    setIsChallengeModalOpen(true);
+  };
+
+  const handleToggleEmpathy = (enabled: boolean) => {
+    setIsBurnoutMode(enabled);
+    if (roadmap) {
+      const updatedModules = roadmap.modules.map((mod) => ({
+        ...mod,
+        isMicroTask: enabled,
+        estimatedMinutes: enabled ? 10 : 45
+      }));
+      setRoadmap({
+        ...roadmap,
+        modules: updatedModules
+      });
+    }
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
+    <div className="flex flex-col min-h-screen bg-zinc-950 text-zinc-100 selection:bg-cyan-500/30 font-sans">
+      {/* Navbar */}
+      <header className="border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-md sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-gradient-to-tr from-cyan-600 to-purple-600 text-white shadow-md shadow-cyan-500/20">
+              <Cpu className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-sm font-bold text-zinc-100 tracking-wide">
+                  PATHCRAFT <span className="text-cyan-400 font-mono">AI</span>
+                </h1>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-cyan-500/10 text-cyan-400 border border-cyan-500/30 font-mono">
+                  Dual-USP Hackathon Prototype
+                </span>
+              </div>
+              <p className="text-[11px] text-zinc-400">Personalized AI Learning Path Recommender</p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="hidden sm:flex items-center gap-2 text-xs text-zinc-400 bg-zinc-900/90 border border-zinc-800 px-3 py-1.5 rounded-lg font-mono">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping" />
+              <span>Focus Challenge Modal Ready</span>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Container - Clean Full-Width Dashboard */}
+      <main className="flex-1 max-w-5xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+        {/* Dashboard Stat Bar */}
+        <Dashboard
+          roadmap={roadmap}
+          isBurnoutMode={isBurnoutMode}
+          activeModuleCount={roadmap?.modules.length || 0}
         />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+
+        {/* Empathy Engine Banner */}
+        <EmpathyBanner
+          isBurnoutMode={isBurnoutMode}
+          onToggleEmpathy={handleToggleEmpathy}
+          detectedKeyword={detectedKeyword}
+        />
+
+        {/* Dual-Mode Chat Input Interface */}
+        <ChatInterface
+          onGenerateRoadmap={handleGenerateRoadmap}
+          isLoading={isLoading}
+          onFatigueChange={(fatigued, keyword) => {
+            setIsBurnoutMode(fatigued);
+            if (keyword) setDetectedKeyword(keyword);
+          }}
+        />
+
+        {/* Full-Width Interactive Skill Tree Roadmap */}
+        {roadmap && (
+          <div className="pt-4">
+            <RoadmapVisualizer
+              roadmap={roadmap}
+              selectedModule={selectedModule}
+              onSelectModule={(mod) => setSelectedModule(mod)}
+              onOpenChallenge={handleOpenChallenge}
+              isBurnoutMode={isBurnoutMode}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </div>
+        )}
       </main>
+
+      {/* Dedicated Gatekeeper Code Reviewer Focus Modal */}
+      <ChallengeModal
+        module={activeChallengeModule}
+        isOpen={isChallengeModalOpen}
+        onClose={() => setIsChallengeModalOpen(false)}
+        onGatekeeperPassed={handleGatekeeperPassed}
+      />
     </div>
   );
 }
+
+
