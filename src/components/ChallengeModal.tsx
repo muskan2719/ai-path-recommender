@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { ShieldCheck, Play, X, Lightbulb, CheckCircle2, XCircle, RefreshCw, Code2, ArrowRight } from 'lucide-react';
 import { LearningModule } from '@/lib/types';
+import curatedResources from '@/lib/data/curatedResources.json';
 
 interface ChallengeModalProps {
   module: LearningModule | null;
@@ -21,43 +22,43 @@ interface ReviewResultData {
   unlockedNextModuleId?: string;
 }
 
-function getHintForModule(mod: LearningModule): string {
-  const text = `${mod.title} ${mod.description}`.toLowerCase();
+interface CuratedChallenge {
+  id: string;
+  title: string;
+  problemStatement: string;
+  exampleInput: string;
+  validCodeCriteria: string;
+  starterCode: string;
+}
 
-  if (text.includes('next.js') || text.includes('route') || text.includes('server')) {
-    return '💡 Hint: Next.js App Router route handlers export async functions named GET, POST, PUT, etc. Make sure to return Response.json({ ... }) or NextResponse.json({ ... }).';
+
+function getCuratedChallenge(mod: LearningModule): CuratedChallenge {
+  const challenges = curatedResources.codingChallenges;
+  // Select challenge based on module title / id hash to ensure deterministic variety
+  const str = mod.id + mod.title;
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash << 5) - hash + str.charCodeAt(i);
+    hash |= 0;
   }
-  if (text.includes('vector') || text.includes('embeddings') || text.includes('similarity')) {
-    return '💡 Hint: Cosine similarity is (A · B) / (||A|| * ||B||). Multiply matching vector indices, sum them up, and divide by the product of their vector magnitudes.';
+  const index = Math.abs(hash) % challenges.length;
+  return challenges[index];
+}
+
+function getHintForModule(mod: LearningModule, challengeObj: CuratedChallenge): string {
+  const text = `${mod.title} ${mod.description} ${challengeObj.problemStatement}`.toLowerCase();
+
+  if (text.includes('email') || text.includes('validator')) {
+    return '💡 Hint: Use a regex pattern like /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/ or check for "@" and "." while rejecting empty/non-string values.';
   }
-  if (text.includes('prompt') || text.includes('json') || text.includes('guardrail')) {
-    return '💡 Hint: To parse raw LLM strings safely, strip triple backtick blocks (```json ... ```) using regex or string replace before calling JSON.parse().';
+  if (text.includes('next.js') || text.includes('health') || text.includes('route')) {
+    return '💡 Hint: Next.js App Router route handlers export async functions like `export async function GET()`. Use `NextResponse.json({ status: "ok" }, { status: 200 })`.';
+  }
+  if (text.includes('character') || text.includes('unique') || text.includes('repeating')) {
+    return '💡 Hint: Use a frequency map object/dictionary to count occurrences of each character in the string, then iterate through the string again to find the first character with frequency 1.';
   }
 
   return '💡 Hint: Ensure your code snippet defines a complete function with typed input parameters and an explicit return statement satisfying the target objective.';
-}
-
-function getDefaultIncompleteStarterCode(mod: LearningModule): string {
-  const starter = mod.gatekeeperChallenge?.starterCode;
-  
-  if (starter && starter.includes('// TODO')) {
-    return starter;
-  }
-
-  const titleLower = mod.title.toLowerCase();
-  if (titleLower.includes('next.js') || titleLower.includes('api') || titleLower.includes('route')) {
-    return `export async function POST(request: Request) {\n  // TODO: Validate request JSON body\n  // TODO: Return 200 response with payload\n  \n  // Replace with your implementation\n}`;
-  }
-
-  if (titleLower.includes('vector') || titleLower.includes('cosine') || titleLower.includes('embedding')) {
-    return `function cosineSimilarity(vecA: number[], vecB: number[]): number {\n  // TODO: Calculate dot product of vecA and vecB\n  // TODO: Divide by magnitude product ||vecA|| * ||vecB||\n  \n  // Replace with your implementation\n}`;
-  }
-
-  if (titleLower.includes('prompt') || titleLower.includes('json') || titleLower.includes('guardrail')) {
-    return `function parseCleanJson(rawText: string) {\n  // TODO: Clean triple backtick markdown wrappers\n  // TODO: Parse cleaned string into JSON object\n  \n  // Replace with your implementation\n}`;
-  }
-
-  return `// Challenge: ${mod.title}\nexport function executeTask() {\n  // TODO: Implement required logic to satisfy objective\n  // TODO: Add proper return statement\n  \n  // Replace with your implementation\n}`;
 }
 
 export const ChallengeModal: React.FC<ChallengeModalProps> = ({
@@ -68,23 +69,35 @@ export const ChallengeModal: React.FC<ChallengeModalProps> = ({
 }) => {
   if (!isOpen || !module) return null;
 
+  const curated = getCuratedChallenge(module);
   const challenge = module.gatekeeperChallenge;
-  const [code, setCode] = useState(() => getDefaultIncompleteStarterCode(module));
+
+  const [code, setCode] = useState(() => {
+    if (challenge?.starterCode && challenge.starterCode.includes('// TODO')) {
+      return challenge.starterCode;
+    }
+    return curated.starterCode;
+  });
   const [showHint, setShowHint] = useState(false);
   const [isEvaluating, setIsEvaluating] = useState(false);
   const [evaluation, setEvaluation] = useState<ReviewResultData | null>(null);
 
   useEffect(() => {
-    setCode(getDefaultIncompleteStarterCode(module));
+    if (challenge?.starterCode && challenge.starterCode.includes('// TODO')) {
+      setCode(challenge.starterCode);
+    } else {
+      setCode(curated.starterCode);
+    }
     setEvaluation(null);
     setShowHint(false);
   }, [module.id]);
 
 
+
   const handleRunEvaluation = async () => {
     setIsEvaluating(true);
 
-    const targetObjective = challenge?.instruction || module.description || `Implement logic for ${module.title}`;
+    const targetObjective = challenge?.instruction || `${curated.title}: ${curated.problemStatement} (${curated.validCodeCriteria})`;
 
     try {
       const res = await fetch('/api/review-code', {
@@ -117,7 +130,7 @@ export const ChallengeModal: React.FC<ChallengeModalProps> = ({
 
   const isPass = evaluation?.status === 'pass' || evaluation?.passed === true;
   const feedbackText = evaluation?.reasoning || evaluation?.feedback || '';
-  const hintText = getHintForModule(module);
+  const hintText = getHintForModule(module, curated);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
@@ -156,8 +169,8 @@ export const ChallengeModal: React.FC<ChallengeModalProps> = ({
           {/* Target Objective Box */}
           <div className="bg-zinc-900/80 border border-zinc-800 rounded-xl p-4 text-xs space-y-2">
             <div className="flex items-center justify-between">
-              <span className="font-semibold text-cyan-400 uppercase tracking-wider text-[10px] font-mono">
-                Target Objective
+              <span className="font-semibold text-cyan-400 uppercase tracking-wider text-[10px] font-mono flex items-center gap-1.5">
+                🎯 Target Objective: <span className="text-zinc-200">{curated.title}</span>
               </span>
 
               {/* Hint Toggle Button */}
@@ -171,15 +184,19 @@ export const ChallengeModal: React.FC<ChallengeModalProps> = ({
             </div>
 
             <p className="text-zinc-200 text-xs leading-relaxed">
-              {challenge?.instruction || module.description}
+              {challenge?.instruction || curated.problemStatement}
             </p>
 
-            {challenge?.expectedOutcome && (
-              <div className="flex items-center gap-2 text-zinc-400 text-[11px] pt-2 border-t border-zinc-800/80">
-                <span className="font-mono text-zinc-500">Expected Outcome:</span>
-                <span className="text-zinc-300 font-mono">{challenge.expectedOutcome}</span>
+            <div className="space-y-1 pt-2 border-t border-zinc-800/80 text-[11px]">
+              <div className="flex items-start gap-2 text-zinc-400">
+                <span className="font-mono text-zinc-500 shrink-0">Example/Input:</span>
+                <span className="text-zinc-300 font-mono">{curated.exampleInput}</span>
               </div>
-            )}
+              <div className="flex items-start gap-2 text-zinc-400">
+                <span className="font-mono text-zinc-500 shrink-0">Criteria:</span>
+                <span className="text-zinc-300 font-sans">{curated.validCodeCriteria}</span>
+              </div>
+            </div>
 
             {/* Revealed Hint Box */}
             {showHint && (

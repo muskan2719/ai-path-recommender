@@ -1,0 +1,265 @@
+{
+  "jobPresets": [
+    {
+      "id": "job-1",
+      "title": "Full-Stack Developer — SaaS Platform",
+      "company": "Carrier Compliance Services Inc.",
+      "location": "Remote, India",
+      "realPostingUrl": "https://in.linkedin.com/jobs/view/full-stack-developer-%E2%80%94-saas-platform-next-js-typescript-postgresql-remote-at-carrier-compliance-services-inc-4387665905",
+      "responsibilities": [
+        "Build and maintain a SaaS platform using Next.js App Router and TypeScript.",
+        "Develop frontend features with Ant Design and TanStack Query.",
+        "Build and consume REST APIs and work with PostgreSQL and ORM tooling.",
+        "Maintain CI/CD workflows using GitHub Actions and Docker.",
+        "Work with authentication/session management, Redis-based queues, and cloud storage."
+      ],
+      "requirements": [
+        "5+ years in the React ecosystem with mandatory Next.js App Router experience.",
+        "5+ years of TypeScript with strict typing.",
+        "Strong PostgreSQL, REST API, Git, and ORM experience; Prisma preferred.",
+        "Experience with Ant Design 5 and TanStack Query v5.",
+        "Knowledge of NextAuth, Redis/BullMQ, AWS S3, Docker, and GitHub Actions."
+      ],
+      "techStack": ["Next.js", "React", "TypeScript", "PostgreSQL", "Prisma/ORM", "REST APIs", "Ant Design", "TanStack Query", "NextAuth", "Redis/BullMQ", "AWS S3", "Docker", "GitHub Actions"],
+      "rawJdText": "Full-Stack Developer — SaaS Platform (Next.js / TypeScript / PostgreSQL) at Carrier Compliance Services Inc.\nKey Responsibilities:\n- Build and maintain a SaaS platform using Next.js App Router and TypeScript.\n- Develop frontend features with Ant Design and TanStack Query.\n- Build and consume REST APIs and work with PostgreSQL and ORM tooling.\n- Maintain CI/CD workflows using GitHub Actions and Docker.\n- Work with authentication/session management, Redis-based queues, and cloud storage.\nKey Requirements:\n- 5+ years in the React ecosystem with mandatory Next.js App Router experience.\n- 5+ years of TypeScript with strict typing.\n- Strong PostgreSQL, REST API, Git, and ORM experience; Prisma preferred.\n- Experience with Ant Design 5 and TanStack Query v5.\n- Knowledge of NextAuth, Redis/BullMQ, AWS S3, Docker, and GitHub Actions.\nTech Stack: Next.js, React, TypeScript, PostgreSQL, Prisma/ORM, REST APIs, Ant Design, TanStack Query, NextAuth, Redis/BullMQ, AWS S3, Docker, GitHub Actions"
+    },
+    {
+      "id": "job-2",
+      "title": "AI ML Engineer",
+      "company": "Infosys",
+      "location": "Bengaluru, India",
+      "realPostingUrl": "https://in.linkedin.com/jobs/view/ai-ml-engineer-at-infosys-4441381826",
+      "responsibilities": [
+        "Perform data collection, profiling, exploratory data analysis, and data preparation.",
+        "Develop, train, evaluate, and deploy machine-learning models.",
+        "Work on Python-based AI/ML applications and enterprise GenAI integrations.",
+        "Monitor model performance and evaluate models using appropriate metrics.",
+        "Apply responsible-AI practices including fairness, transparency, and auditability."
+      ],
+      "requirements": [
+        "Strong Python proficiency for data processing, automation, and model development.",
+        "Strong knowledge of ML frameworks such as TensorFlow, PyTorch, and scikit-learn.",
+        "Understanding of the full ML model lifecycle: training, evaluation, and deployment.",
+        "Experience or interest in GenAI enterprise integrations.",
+        "Knowledge of cloud AI services such as Azure, AWS, or GCP."
+      ],
+      "techStack": ["Python", "TensorFlow", "PyTorch", "scikit-learn", "GenAI", "cloud AI services", "data processing", "ML evaluation"],
+      "rawJdText": "AI ML Engineer at Infosys\nKey Responsibilities:\n- Perform data collection, profiling, exploratory data analysis, and data preparation.\n- Develop, train, evaluate, and deploy machine-learning models.\n- Work on Python-based AI/ML applications and enterprise GenAI integrations.\n- Monitor model performance and evaluate models using appropriate metrics.\n- Apply responsible-AI practices including fairness, transparency, and auditability.\nKey Requirements:\n- Strong Python proficiency for data processing, automation, and model development.\n- Strong knowledge of ML frameworks such as TensorFlow, PyTorch, and scikit-learn.\n- Understanding of the full ML model lifecycle: training, evaluation, and deployment.\n- Experience or interest in GenAI enterprise integrations.\n- Knowledge of cloud AI services such as Azure, AWS, or GCP.\nTech Stack: Python, TensorFlow, PyTorch, scikit-learn, GenAI, cloud AI services, data processing, ML evaluation"
+    },
+    {
+      "id": "job-3",
+      "title": "React Developer",
+      "company": "Three Across",
+      "location": "Bengaluru, India",
+      "realPostingUrl": "https://in.linkedin.com/jobs/view/react-developer-at-three-across-4387104254",
+      "responsibilities": [
+        "Develop and maintain frontend applications using React.js.",
+        "Build reusable UI components and integrate RESTful APIs.",
+        "Ensure code quality through testing, reviews, and frontend best practices.",
+        "Work with modern frontend tooling and responsive design.",
+        "Collaborate with engineering and product teams to deliver features."
+      ],
+      "requirements": [
+        "Strong hands-on React.js and Redux experience.",
+        "Proficiency in JavaScript, HTML5, and CSS3.",
+        "Experience with RESTful APIs and API integration.",
+        "Familiarity with Webpack, Babel, and Git.",
+        "Understanding of responsive design and cross-browser compatibility.",
+        "TypeScript and performance/SEO knowledge are useful additional skills."
+      ],
+      "techStack": ["React.js", "Redux", "JavaScript ES6+", "HTML5", "CSS3", "REST APIs", "Webpack", "Babel", "Git", "TypeScript"],
+      "rawJdText": "React Developer at Three Across\nKey Responsibilities:\n- Develop and maintain frontend applications using React.js.\n- Build reusable UI components and integrate RESTful APIs.\n- Ensure code quality through testing, reviews, and frontend best practices.\n- Work with modern frontend tooling and responsive design.\n- Collaborate with engineering and product teams to deliver features.\nKey Requirements:\n- Strong hands-on React.js and Redux experience.\n- Proficiency in JavaScript, HTML5, and CSS3.\n- Experience with RESTful APIs and API integration.\n- Familiarity with Webpack, Babel, and Git.\n- Understanding of responsive design and cross-browser compatibility.\n- TypeScript and performance/SEO knowledge are useful additional skills.\nTech Stack: React.js, Redux, JavaScript ES6+, HTML5, CSS3, REST APIs, Webpack, Babel, Git, TypeScript"
+    }
+  ],
+  "learningResources": {
+    "pythonBasics": [
+      {
+        "title": "The Python Tutorial",
+        "type": "Official Docs",
+        "link": "https://docs.python.org/3/tutorial/",
+        "whyUseful": "Official Python tutorial covering syntax, data structures, modules, I/O, exceptions, classes, and more."
+      },
+      {
+        "title": "Learn Python – Full Course for Beginners – freeCodeCamp",
+        "type": "Free YouTube",
+        "link": "https://www.youtube.com/watch?v=rfscVS0vtbw",
+        "whyUseful": "Long-form beginner course covering core Python concepts, functions, loops, files, classes, and projects."
+      },
+      {
+        "title": "30 Days of Python – Asabeneh",
+        "type": "GitHub",
+        "link": "https://github.com/Asabeneh/30-Days-Of-Python",
+        "whyUseful": "Step-by-step Python challenge with exercises and practical examples."
+      },
+      {
+        "title": "Python Tutor",
+        "type": "Interactive",
+        "link": "https://pythontutor.com/",
+        "whyUseful": "Interactive environment for visualizing Python program execution and data structures."
+      },
+      {
+        "title": "Real Python",
+        "type": "Reference",
+        "link": "https://realpython.com/",
+        "whyUseful": "Practical Python tutorials, examples, and articles for beginner-to-advanced topics."
+      }
+    ],
+    "nextjsReact": [
+      {
+        "title": "Next.js Documentation",
+        "type": "Official Docs",
+        "link": "https://nextjs.org/docs",
+        "whyUseful": "Official Next.js documentation covering App Router, guides, APIs, and full-stack application development."
+      },
+      {
+        "title": "React Learn",
+        "type": "Official Docs",
+        "link": "https://react.dev/learn",
+        "whyUseful": "Official React learning material covering components, JSX, state, events, lists, and sharing data."
+      },
+      {
+        "title": "Next.js for Beginners – Full Course – freeCodeCamp",
+        "type": "Free YouTube",
+        "link": "https://www.youtube.com/watch?v=1WmNXEVia8I",
+        "whyUseful": "Free course building a full-stack recipe app and covering routing, data fetching, APIs, and deployment."
+      },
+      {
+        "title": "Vercel Learn Next.js Starter Code",
+        "type": "GitHub",
+        "link": "https://github.com/vercel/next-learn",
+        "whyUseful": "Official Vercel repository containing starter/final code for Next.js learning projects."
+      },
+      {
+        "title": "30 Days of React – Asabeneh",
+        "type": "GitHub",
+        "link": "https://github.com/Asabeneh/30-Days-Of-React",
+        "whyUseful": "Step-by-step React challenge covering components, props, state, hooks, routing, forms, and projects."
+      }
+    ],
+    "systemDesign": [
+      {
+        "title": "Patterns of Distributed Systems – Martin Fowler",
+        "type": "Article",
+        "link": "https://martinfowler.com/articles/patterns-of-distributed-systems/",
+        "whyUseful": "Catalog of reusable distributed-system patterns and architecture concepts."
+      },
+      {
+        "title": "System Design Primer – Donne Martin",
+        "type": "GitHub",
+        "link": "https://github.com/donnemartin/system-design-primer",
+        "whyUseful": "Large open-source collection for scalable system design and interview preparation."
+      },
+      {
+        "title": "System Design for Beginners – freeCodeCamp",
+        "type": "Free YouTube",
+        "link": "https://www.youtube.com/watch?v=m8Icp_Cid5o",
+        "whyUseful": "Beginner course covering requirements, APIs, databases, networking, fault tolerance, and design trade-offs."
+      },
+      {
+        "title": "System Design Full Course (High Level Design) – Rohit Negi",
+        "type": "Free YouTube",
+        "link": "https://www.youtube.com/watch?v=W8kg8h-uIC8",
+        "whyUseful": "Practical HLD course covering load balancing, caching, databases, rate limiting, and scalable architectures."
+      },
+      {
+        "title": "AWS Architecture Center",
+        "type": "Article",
+        "link": "https://aws.amazon.com/architecture/",
+        "whyUseful": "AWS reference architectures and architecture guidance for scalable cloud systems."
+      }
+    ],
+    "restApis": [
+      {
+        "title": "MDN HTTP",
+        "type": "Reference",
+        "link": "https://developer.mozilla.org/en-US/docs/Web/HTTP",
+        "whyUseful": "Authoritative reference for HTTP concepts, requests, responses, methods, headers, and web communication."
+      },
+      {
+        "title": "FastAPI Tutorial",
+        "type": "Official Docs",
+        "link": "https://fastapi.tiangolo.com/tutorial/",
+        "whyUseful": "Official step-by-step guide for creating REST APIs with Python and FastAPI."
+      },
+      {
+        "title": "REST API With Flask & SQLAlchemy – Traversy Media",
+        "type": "Free YouTube",
+        "link": "https://www.classcentral.com/course/youtube-rest-api-with-flask-sql-alchemy-137064",
+        "whyUseful": "Free YouTube video covering CRUD REST API development with Flask, SQLAlchemy, and Postman."
+      },
+      {
+        "title": "Public APIs",
+        "type": "GitHub",
+        "link": "https://github.com/public-apis/public-apis",
+        "whyUseful": "Community-curated collection of public APIs for experimentation and projects."
+      },
+      {
+        "title": "Postman Learning Center",
+        "type": "Reference",
+        "link": "https://learning.postman.com/docs/getting-started/overview/",
+        "whyUseful": "Guides for creating, sending, testing, documenting, and working with APIs in Postman."
+      }
+    ],
+    "aiLlms": [
+      {
+        "title": "OpenAI API Developer Quickstart",
+        "type": "Official Docs",
+        "link": "https://platform.openai.com/docs/quickstart/make-your-first-api-request",
+        "whyUseful": "Official quickstart for making API requests and building applications with OpenAI models."
+      },
+      {
+        "title": "Hugging Face LLM Course",
+        "type": "Course",
+        "link": "https://huggingface.co/learn/llm-course/en/chapter1/1",
+        "whyUseful": "Free course covering NLP and LLM concepts using Transformers, Datasets, Tokenizers, and the Hugging Face Hub."
+      },
+      {
+        "title": "Microsoft Generative AI for Beginners",
+        "type": "GitHub",
+        "link": "https://github.com/microsoft/generative-ai-for-beginners",
+        "whyUseful": "21-lesson open-source course for building generative AI applications with Python and TypeScript."
+      },
+      {
+        "title": "Introduction to Large Language Models – Google Cloud Tech",
+        "type": "Free YouTube",
+        "link": "https://www.youtube.com/watch?v=zizonToFXDs",
+        "whyUseful": "Free introductory video explaining LLMs, use cases, prompt tuning, and GenAI development tools."
+      },
+      {
+        "title": "Generative AI with Large Language Models – DeepLearning.AI",
+        "type": "Course",
+        "link": "https://www.deeplearning.ai/courses/generative-ai-with-llms",
+        "whyUseful": "Structured course covering the LLM lifecycle, transformers, prompting, fine-tuning, evaluation, and deployment."
+      }
+    ]
+  },
+  "codingChallenges": [
+    {
+      "id": "challenge-email-validator",
+      "title": "1. Email Address Validator",
+      "problemStatement": "Write a function validateEmail(email) that returns true when the supplied email has a valid basic email structure and false otherwise. The validator should reject empty values and obvious malformed inputs.",
+      "exampleInput": "Examples: \"user@example.com\", \"abc@gmail.com\", \"user@\", \"@example.com\", \"user.example.com\"",
+      "validCodeCriteria": "A valid solution should return true for normal addresses such as user@example.com and false for malformed examples. It should handle null/empty input safely.",
+      "starterCode": "function validateEmail(email: string): boolean {\n  // TODO: Validate email string format using regex or string methods\n  // TODO: Return true for valid email, false for malformed/empty input\n  \n  // Replace with your implementation\n}",
+      "validImplementationExample": "function validateEmail(email) { if (typeof email !== 'string') return false; const pattern = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/; return pattern.test(email); }"
+    },
+    {
+      "id": "challenge-nextjs-route",
+      "title": "2. Next.js API Route Returning HTTP 200",
+      "problemStatement": "Create a simple Next.js App Router API endpoint at app/api/health/route.js. A GET request to /api/health must return JSON containing a status field with the value \"ok\" and an HTTP 200 response.",
+      "exampleInput": "GET /api/health",
+      "validCodeCriteria": "The endpoint returns HTTP 200 and JSON such as { \"status\": \"ok\" }. It should not return HTML or a client-side page.",
+      "starterCode": "import { NextResponse } from 'next/server';\n\nexport async function GET() {\n  // TODO: Return NextResponse.json with { status: 'ok' } and status 200\n  \n  // Replace with your implementation\n}",
+      "validImplementationExample": "import { NextResponse } from 'next/server'; export async function GET() { return NextResponse.json({ status: 'ok' }, { status: 200 }); }"
+    },
+    {
+      "id": "challenge-first-unique-char",
+      "title": "3. Find the First Non-Repeating Character",
+      "problemStatement": "Write a function firstUniqueChar(str) that returns the first character that appears exactly once in the input string. If no character is unique, return null.",
+      "exampleInput": "\"swiss\" -> \"w\"; \"aabb\" -> null; \"leetcode\" -> \"l\"",
+      "validCodeCriteria": "The solution must count character frequencies and then preserve the original order when finding the first character with frequency 1. It should work for an empty string.",
+      "starterCode": "function firstUniqueChar(str: string): string | null {\n  // TODO: Count character frequencies in the input string\n  // TODO: Return the first character with frequency 1, or null if none exist\n  \n  // Replace with your implementation\n}",
+      "validImplementationExample": "function firstUniqueChar(str) { const freq = {}; for (const ch of str) freq[ch] = (freq[ch] || 0) + 1; for (const ch of str) if (freq[ch] === 1) return ch; return null; }"
+    }
+  ]
+}

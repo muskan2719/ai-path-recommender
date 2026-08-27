@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Target, Briefcase, Sparkles, Send, AlertCircle, FileSearch, Loader2 } from 'lucide-react';
 import { InputMode } from '@/lib/types';
 import { JDParserOutput } from '@/lib/prompts/jdParserPrompt';
+import curatedResources from '@/lib/data/curatedResources.json';
 
 interface ChatInterfaceProps {
   onGenerateRoadmap: (data: {
@@ -176,15 +177,37 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
           </div>
         ) : (
           <div>
-            <label className="block text-xs font-medium text-zinc-300 mb-1.5 flex items-center justify-between">
-              <span>Paste Raw LinkedIn Job Description</span>
-              <span className="text-[10px] text-purple-400 font-mono">LLM JD Parser API</span>
-            </label>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-2 gap-2">
+              <label className="text-xs font-medium text-zinc-300 flex items-center justify-between">
+                <span>Paste Raw LinkedIn Job Description</span>
+              </label>
+
+              {/* Quick Try Demo Presets */}
+              <div className="flex items-center gap-1.5 flex-wrap">
+                <span className="text-[10px] text-purple-400 font-mono font-semibold mr-1">Quick Try:</span>
+                {curatedResources.jobPresets.map((preset) => (
+                  <button
+                    key={preset.id}
+                    type="button"
+                    onClick={() => {
+                      setJdText(preset.rawJdText);
+                      checkFatigueKeywords(preset.rawJdText);
+                    }}
+                    className="text-[10px] px-2.5 py-1 rounded-lg bg-purple-500/10 hover:bg-purple-500/20 text-purple-300 border border-purple-500/30 transition flex items-center gap-1 font-medium"
+                  >
+                    <span>
+                      {preset.id === 'job-1' ? '💼' : preset.id === 'job-2' ? '🤖' : '⚛️'} {preset.title}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
             <textarea
-              rows={4}
+              rows={5}
               value={jdText}
               onChange={(e) => handleInputChange(e.target.value, 'linkedin_jd')}
-              placeholder="Paste raw LinkedIn job description text here... (e.g. 'We are hiring a Senior Full-Stack AI Engineer with 3+ years experience in Next.js, TypeScript, Vector Search, and RAG architectures...')"
+              placeholder="Paste raw LinkedIn job description text here... (or click one of the 'Quick Try' demo preset buttons above)"
               className="w-full bg-zinc-950/80 border border-zinc-800 rounded-xl p-3.5 text-xs font-mono text-purple-200 placeholder-zinc-500 focus:outline-none focus:border-purple-500/60 focus:ring-1 focus:ring-purple-500/40 transition leading-relaxed"
             />
           </div>
