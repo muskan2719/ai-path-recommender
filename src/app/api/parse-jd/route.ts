@@ -26,12 +26,12 @@ export async function POST(request: Request) {
         if (parsedResult?.role_title && Array.isArray(parsedResult.learning_roadmap)) {
           return NextResponse.json(parsedResult);
         }
-        console.warn('[parse-jd API] Live LLM response structure invalid. Falling back to mock data.');
-      } catch (llmError) {
-        console.warn('[parse-jd API] Live LLM call failed or key invalid:', llmError);
+        console.error('❌ [parse-jd API Fallback Triggered] Live LLM response structure invalid or missing fields. Falling back to mock data.', { rawResponse });
+      } catch (llmError: any) {
+        console.error('❌ [parse-jd API Fallback Triggered] Live LLM call failed. Reason:', llmError?.message || llmError);
       }
     } else {
-      console.warn('[parse-jd API] GEMINI_API_KEY not detected. Using structured mock fallback.');
+      console.error('❌ [parse-jd API Fallback Triggered] GEMINI_API_KEY / OPENAI_API_KEY environment variable is not defined in process.env.');
     }
 
     // Curated mock fallback when API key is absent or LLM fails

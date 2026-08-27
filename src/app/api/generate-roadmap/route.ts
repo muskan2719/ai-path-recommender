@@ -89,12 +89,12 @@ Generate a strict JSON object matching this schema:
             roadmap: liveRoadmap
           });
         }
-        console.warn('[generate-roadmap API] Live LLM response structure invalid. Falling back to mock roadmap.');
-      } catch (llmError) {
-        console.warn('[generate-roadmap API] Live LLM call failed or key invalid:', llmError);
+        console.error('❌ [generate-roadmap API Fallback Triggered] Live LLM response structure invalid or missing fields. Falling back to mock roadmap.', { rawLLMText });
+      } catch (llmError: any) {
+        console.error('❌ [generate-roadmap API Fallback Triggered] Live LLM call failed. Reason:', llmError?.message || llmError);
       }
     } else {
-      console.warn('[generate-roadmap API] GEMINI_API_KEY not detected. Using structured mock fallback.');
+      console.error('❌ [generate-roadmap API Fallback Triggered] GEMINI_API_KEY / OPENAI_API_KEY environment variable is not defined in process.env.');
     }
 
     // Curated mock fallback when API key is absent or LLM fails

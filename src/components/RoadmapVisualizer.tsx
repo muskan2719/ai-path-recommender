@@ -12,6 +12,8 @@ interface RoadmapVisualizerProps {
   isBurnoutMode?: boolean;
 }
 
+import curatedResources from '@/lib/data/curatedResources.json';
+
 interface ResourceItem {
   title: string;
   icon: string;
@@ -19,46 +21,47 @@ interface ResourceItem {
 }
 
 function getResourcesForModule(mod: LearningModule): ResourceItem[] {
+  // If the module has custom valid resources, use them
   if (mod.resources && mod.resources.length > 0) {
-    return mod.resources.map((r) => ({
-      title: r.title,
-      icon: r.type === 'video' ? '▶️' : r.type === 'repo' ? '📝' : '📖',
-      url: r.url
+    const valid = mod.resources
+      .filter((r) => r.url && r.url.trim().length > 0)
+      .map((r) => ({
+        title: r.title,
+        icon: r.type === 'video' ? '▶️' : r.type === 'repo' ? '📝' : '📖',
+        url: r.url
+      }));
+    if (valid.length > 0) return valid;
+  }
+
+  const titleLower = `${mod.title} ${mod.description}`.toLowerCase();
+  const allRes = curatedResources.learningResources;
+
+  let selectedCategory: Array<{ title: string; type: string; link: string; whyUseful: string }> = [];
+
+  if (titleLower.includes('python') || titleLower.includes('ml') || titleLower.includes('data processing')) {
+    selectedCategory = allRes.pythonBasics;
+  } else if (titleLower.includes('next') || titleLower.includes('react') || titleLower.includes('frontend') || titleLower.includes('saas') || titleLower.includes('ui')) {
+    selectedCategory = allRes.nextjsReact;
+  } else if (titleLower.includes('system') || titleLower.includes('design') || titleLower.includes('architecture') || titleLower.includes('distributed')) {
+    selectedCategory = allRes.systemDesign;
+  } else if (titleLower.includes('api') || titleLower.includes('rest') || titleLower.includes('http') || titleLower.includes('route')) {
+    selectedCategory = allRes.restApis;
+  } else if (titleLower.includes('ai') || titleLower.includes('llm') || titleLower.includes('rag') || titleLower.includes('vector') || titleLower.includes('embedding')) {
+    selectedCategory = allRes.aiLlms;
+  } else {
+    // Default fallback pick from nextjsReact and restApis
+    selectedCategory = [...allRes.nextjsReact.slice(0, 2), ...allRes.restApis.slice(0, 1)];
+  }
+
+  return selectedCategory
+    .filter((item) => item.link && item.link.trim().length > 0)
+    .map((item) => ({
+      title: item.title,
+      icon: item.type.includes('YouTube') ? '▶️' : item.type.includes('GitHub') ? '📝' : '📖',
+      url: item.link
     }));
-  }
-
-  const titleLower = mod.title.toLowerCase();
-
-  if (titleLower.includes('next.js') || titleLower.includes('app router') || titleLower.includes('server components')) {
-    return [
-      { title: 'Official Next.js App Router Docs', icon: '📖', url: 'https://nextjs.org/docs/app' },
-      { title: 'Next.js 15 Masterclass (YouTube)', icon: '▶️', url: 'https://youtube.com' },
-      { title: 'Production Starter Template Repo', icon: '📝', url: 'https://github.com' }
-    ];
-  }
-
-  if (titleLower.includes('rag') || titleLower.includes('vector') || titleLower.includes('embedding')) {
-    return [
-      { title: 'OpenAI Embeddings Architecture Guide', icon: '📖', url: 'https://platform.openai.com/docs/guides/embeddings' },
-      { title: 'RAG Pipeline Design (YouTube Video)', icon: '▶️', url: 'https://youtube.com' },
-      { title: 'Pinecone & Vector Search Reference Code', icon: '📝', url: 'https://github.com' }
-    ];
-  }
-
-  if (titleLower.includes('prompt') || titleLower.includes('guardrail') || titleLower.includes('code review') || titleLower.includes('gatekeeper')) {
-    return [
-      { title: 'Structured Output Prompts Documentation', icon: '📖', url: 'https://platform.openai.com/docs/guides/structured-outputs' },
-      { title: 'AI Code Review Guardrails Crash Course', icon: '▶️', url: 'https://youtube.com' },
-      { title: 'Gatekeeper Evaluator Example Repo', icon: '📝', url: 'https://github.com' }
-    ];
-  }
-
-  return [
-    { title: 'Official Technology Documentation', icon: '📖', url: 'https://developer.mozilla.org' },
-    { title: '10-Min Video Masterclass', icon: '▶️', url: 'https://youtube.com' },
-    { title: 'GitHub Reference Code Implementation', icon: '📝', url: 'https://github.com' }
-  ];
 }
+
 
 export const RoadmapVisualizer: React.FC<RoadmapVisualizerProps> = ({
   roadmap,
@@ -196,7 +199,7 @@ export const RoadmapVisualizer: React.FC<RoadmapVisualizerProps> = ({
               </div>
 
               {/* RECOMMENDED STUDY MATERIALS SECTION */}
-              {isUnlocked && (
+              {isUnlocked && resources.filter((res) => res.url && res.url.trim().length > 0).length > 0 && (
                 <div className="mt-3.5 pt-3 border-t border-zinc-800/60 space-y-2">
                   <div className="flex items-center gap-1.5 text-[11px] font-semibold text-zinc-300 font-mono">
                     <BookOpen className="w-3.5 h-3.5 text-cyan-400" />
@@ -205,20 +208,22 @@ export const RoadmapVisualizer: React.FC<RoadmapVisualizerProps> = ({
                   </div>
 
                   <div className="flex flex-wrap gap-2 pt-0.5">
-                    {resources.map((res, rIdx) => (
-                      <a
-                        key={rIdx}
-                        href={res.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={(e) => e.stopPropagation()}
-                        className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-zinc-950/80 border border-zinc-800 hover:border-cyan-500/50 hover:bg-cyan-950/40 text-zinc-300 hover:text-cyan-300 transition-all group shadow-sm"
-                      >
-                        <span className="text-xs">{res.icon}</span>
-                        <span className="font-medium text-[11px]">{res.title}</span>
-                        <ExternalLink className="w-3 h-3 text-zinc-500 group-hover:text-cyan-400 transition-colors" />
-                      </a>
-                    ))}
+                    {resources
+                      .filter((res) => res.url && res.url.trim().length > 0)
+                      .map((res, rIdx) => (
+                        <a
+                          key={rIdx}
+                          href={res.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-zinc-950/80 border border-zinc-800 hover:border-cyan-500/50 hover:bg-cyan-950/40 text-zinc-300 hover:text-cyan-300 transition-all group shadow-sm"
+                        >
+                          <span className="text-xs">{res.icon}</span>
+                          <span className="font-medium text-[11px]">{res.title}</span>
+                          <ExternalLink className="w-3 h-3 text-zinc-500 group-hover:text-cyan-400 transition-colors" />
+                        </a>
+                      ))}
                   </div>
                 </div>
               )}
