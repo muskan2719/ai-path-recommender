@@ -28,10 +28,11 @@ export async function POST(request: Request) {
 
         if (parsedLLMResult?.status) {
           const isPass = parsedLLMResult.status === 'pass';
+          const calculatedScore = isPass ? (parsedLLMResult.score ?? 95) : 0;
           return NextResponse.json({
             status: parsedLLMResult.status,
             passed: isPass,
-            score: parsedLLMResult.score ?? (isPass ? 95 : 40),
+            score: calculatedScore,
             reasoning: parsedLLMResult.reasoning || 'Evaluated by Senior AI Gatekeeper.',
             feedback: isPass
               ? `✅ Gatekeeper Approved: ${parsedLLMResult.reasoning}`
@@ -70,7 +71,7 @@ export async function POST(request: Request) {
       : {
           status: 'fail' as const,
           passed: false,
-          score: 42,
+          score: 0,
           reasoning: 'Code failed evaluation: Missing necessary return statement, function export logic, or placeholder // TODO detected.',
           feedback: '❌ Gatekeeper Failed: Code submission is incomplete or missing necessary export/return logic required for this checkpoint.',
           suggestions: [

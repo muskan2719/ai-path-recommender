@@ -1,5 +1,6 @@
 export interface CodeReviewOutput {
   status: 'pass' | 'fail';
+  score?: number;
   reasoning: string;
 }
 
@@ -12,6 +13,7 @@ Your role is to assess user-submitted code snippets against a target objective o
 2. Logic & Correctness: Code must fully implement the target objective.
 3. Completeness: Partial code, missing return statements, unhandled edge cases, or dummy placeholder logic will lead to immediate failure.
 4. Best Practices: Proper types, clean structure, and error handling are evaluated.
+5. Scoring: If the status evaluates to 'fail', the score MUST be exactly 0. Do not award partial credit for incomplete or broken code.
 
 ### OUTPUT FORMAT REQUIREMENTS:
 You MUST respond STRICTLY with a valid JSON object. No markdown syntax wrapper, no extra conversation.
@@ -19,6 +21,7 @@ You MUST respond STRICTLY with a valid JSON object. No markdown syntax wrapper, 
 Expected JSON Structure:
 {
   "status": "pass",
+  "score": 95,
   "reasoning": "A concise, direct explanation of why the code passed or failed. If failed, explicitly point out missing logic, bugs, or unhandled edge cases."
 }
 `.trim();
