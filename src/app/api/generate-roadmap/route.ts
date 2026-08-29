@@ -11,6 +11,11 @@ interface GeneratedRoadmapLLMOutput {
     title: string;
     description: string;
     estimated_minutes: number;
+    resources?: Array<{
+      title: string;
+      type: 'docs' | 'video' | 'repo' | 'doc' | 'article';
+      url: string;
+    }>;
     challenge_instruction: string;
     starter_code: string;
     expected_outcome: string;
@@ -48,8 +53,25 @@ Generate a strict JSON object matching this schema:
       "title": "Module Title",
       "description": "Module overview description",
       "estimated_minutes": ${isMicro ? 10 : 45},
+      "resources": [
+        {
+          "title": "Official Documentation / Reference Name",
+          "type": "docs",
+          "url": "https://..."
+        },
+        {
+          "title": "Video Tutorial or YouTube Query Link",
+          "type": "video",
+          "url": "https://..."
+        },
+        {
+          "title": "GitHub Starter Repo",
+          "type": "repo",
+          "url": "https://..."
+        }
+      ],
       "challenge_instruction": "Code challenge objective",
-      "starter_code": "// starter TypeScript code snippet",
+      "starter_code": "// starter code snippet matching topic",
       "expected_outcome": "Expected result description"
     }
   ]
@@ -67,6 +89,13 @@ Generate a strict JSON object matching this schema:
             estimatedMinutes: isMicro ? 10 : (m.estimated_minutes || 45),
             isMicroTask: isMicro,
             status: idx === 0 ? 'unlocked' : 'locked',
+            resources: m.resources && Array.isArray(m.resources) && m.resources.length > 0
+              ? m.resources.map(r => ({
+                  title: r.title,
+                  type: (r.type === 'docs' ? 'doc' : r.type) as 'doc' | 'docs' | 'video' | 'repo' | 'article',
+                  url: r.url
+                }))
+              : undefined,
             gatekeeperChallenge: {
               instruction: m.challenge_instruction || `Implement logic for ${m.title}`,
               starterCode: m.starter_code || `export function execute() {\n  return true;\n}`,

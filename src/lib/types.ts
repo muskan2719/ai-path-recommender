@@ -4,7 +4,7 @@ export type EmpathyStatus = 'normal' | 'burnout_detected' | 'micro_task_mode';
 
 export interface StudyResource {
   title: string;
-  type: 'doc' | 'video' | 'repo' | 'article';
+  type: 'doc' | 'docs' | 'video' | 'repo' | 'article';
   url: string;
 }
 

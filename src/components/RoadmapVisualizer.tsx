@@ -21,7 +21,7 @@ interface ResourceItem {
 }
 
 function getResourcesForModule(mod: LearningModule): ResourceItem[] {
-  // If the module has custom valid resources, use them
+  // 1. If the module has custom valid resources from the AI response, use them directly
   if (mod.resources && mod.resources.length > 0) {
     const valid = mod.resources
       .filter((r) => r.url && r.url.trim().length > 0)
@@ -33,8 +33,24 @@ function getResourcesForModule(mod: LearningModule): ResourceItem[] {
     if (valid.length > 0) return valid;
   }
 
+  // 2. Only fall back to curatedResources.json if the AI response doesn't provide them
   const titleLower = `${mod.title} ${mod.description}`.toLowerCase();
   const allRes = curatedResources.learningResources;
+
+  if (titleLower.includes('c++') || titleLower.includes('cpp') || titleLower.includes('c language')) {
+    return [
+      { title: 'cppreference.com - Official C/C++ Reference', icon: '📖', url: 'https://en.cppreference.com/w/' },
+      { title: 'DevDocs C++ Documentation', icon: '📖', url: 'https://devdocs.io/cpp/' },
+      { title: 'C++ Programming Crash Course', icon: '▶️', url: 'https://www.youtube.com/results?search_query=c%2B%2B+programming+course' }
+    ];
+  }
+  if (titleLower.includes('rust')) {
+    return [
+      { title: 'The Rust Programming Language Book', icon: '📖', url: 'https://doc.rust-lang.org/book/' },
+      { title: 'Rust by Example', icon: '📖', url: 'https://doc.rust-lang.org/rust-by-example/' },
+      { title: 'Rust Tutorial for Beginners', icon: '▶️', url: 'https://www.youtube.com/results?search_query=rust+programming+tutorial' }
+    ];
+  }
 
   let selectedCategory: Array<{ title: string; type: string; link: string; whyUseful: string }> = [];
 
