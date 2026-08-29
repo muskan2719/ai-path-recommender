@@ -24,9 +24,9 @@ export async function callLLM(systemPrompt: string, userPrompt: string): Promise
           }
         });
       } catch (firstModelError) {
-        // Fallback to gemini-1.5-flash if gemini-2.5-flash is not available in region/tier
+        // Fallback to gemini-3.5-flash if primary model fails
         response = await ai.models.generateContent({
-          model: 'gemini-1.5-flash',
+          model: 'gemini-3.5-flash',
           contents: promptText,
           config: {
             responseMimeType: 'application/json',
