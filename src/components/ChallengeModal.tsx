@@ -133,17 +133,17 @@ export const ChallengeModal: React.FC<ChallengeModalProps> = ({
   const hintText = getHintForModule(module, curated);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md animate-in fade-in duration-200">
-      <div className="relative w-full max-w-3xl bg-zinc-950 border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-black/80 backdrop-blur-md bg-opacity-80 animate-in fade-in duration-200">
+      <div className="relative w-full max-w-3xl bg-zinc-950/90 border border-zinc-800/90 rounded-2xl shadow-2xl backdrop-blur-xl overflow-hidden flex flex-col max-h-[90vh]">
         {/* Modal Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-zinc-900/60">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-zinc-800/80 bg-zinc-900/70 backdrop-blur-md">
           <div className="flex items-center gap-3">
-            <div className="p-2 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30">
+            <div className="p-2 rounded-xl bg-purple-500/20 text-purple-400 border border-purple-500/30 shadow-md shadow-purple-500/10">
               <ShieldCheck className="w-5 h-5 text-purple-400" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-sm font-bold text-zinc-100 uppercase tracking-wider font-mono">
+                <h3 className="text-sm font-bold bg-gradient-to-r from-purple-200 via-zinc-100 to-cyan-200 bg-clip-text text-transparent uppercase tracking-wider font-mono">
                   Gatekeeper Code Challenge Focus Mode
                 </h3>
                 <span className="text-[10px] px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30 font-mono">

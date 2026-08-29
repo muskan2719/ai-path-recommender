@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark h-full">
       <body
-        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-zinc-950 text-zinc-100 min-h-full flex flex-col antialiased selection:bg-cyan-500/30 selection:text-cyan-200`}
+        className={`${inter.variable} ${jetbrainsMono.variable} font-sans bg-gradient-to-br from-zinc-950 via-zinc-900 to-zinc-950 text-zinc-100 min-h-full flex flex-col antialiased selection:bg-cyan-500/30 selection:text-cyan-200`}
       >
         {children}
       </body>

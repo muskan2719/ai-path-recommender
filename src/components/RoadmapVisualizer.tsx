@@ -105,14 +105,14 @@ export const RoadmapVisualizer: React.FC<RoadmapVisualizerProps> = ({
               Skill Tree Roadmap
             </span>
             {isBurnoutMode && (
-              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold">
+              <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/40 font-semibold shadow-sm shadow-amber-500/10">
                 🌿 Micro-Task Mode
               </span>
             )}
           </div>
-          <h3 className="text-xl font-bold text-zinc-100 mt-1">{roadmap.title}</h3>
+          <h3 className="text-xl font-bold bg-gradient-to-r from-zinc-100 via-cyan-100 to-zinc-200 bg-clip-text text-transparent mt-1">{roadmap.title}</h3>
           <p className="text-xs text-zinc-400 mt-0.5">
-            Target Role: <span className="text-zinc-200 font-medium">{roadmap.targetRole}</span>
+            Target Role: <span className="text-cyan-300 font-medium">{roadmap.targetRole}</span>
           </p>
         </div>
 
@@ -120,7 +120,7 @@ export const RoadmapVisualizer: React.FC<RoadmapVisualizerProps> = ({
           {roadmap.skillsExtracted.map((skill, idx) => (
             <span
               key={idx}
-              className="text-[11px] px-2.5 py-1 rounded-lg bg-zinc-950/80 border border-zinc-800 text-zinc-300 font-mono"
+              className="text-[11px] px-2.5 py-1 rounded-lg bg-zinc-950/80 border border-zinc-800 text-zinc-300 font-mono hover:border-cyan-500/40 transition-colors"
             >
               {skill}
             </span>
@@ -142,15 +142,15 @@ export const RoadmapVisualizer: React.FC<RoadmapVisualizerProps> = ({
             <div
               key={mod.id}
               onClick={() => handleModuleClick(mod)}
-              className={`p-4 rounded-xl border transition-all duration-200 relative ${
-                isUnlocked ? 'cursor-pointer' : 'cursor-not-allowed opacity-60'
+              className={`p-4 rounded-xl border transition-all duration-300 relative ${
+                isUnlocked ? 'cursor-pointer hover:scale-[1.01] hover:shadow-xl hover:shadow-cyan-500/20' : 'cursor-not-allowed opacity-60'
               } ${
                 isSelected
-                  ? 'bg-cyan-950/30 border-cyan-500/60 shadow-lg shadow-cyan-500/10 ring-1 ring-cyan-500/30'
+                  ? 'bg-cyan-950/30 border-cyan-500/60 shadow-lg shadow-cyan-500/20 ring-1 ring-cyan-500/40'
                   : mod.status === 'completed'
-                  ? 'bg-emerald-950/20 border-emerald-500/40 text-zinc-200'
+                  ? 'bg-emerald-950/20 border-emerald-500/40 text-zinc-200 hover:border-emerald-400/60'
                   : isUnlocked
-                  ? 'bg-zinc-950/60 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/60 text-zinc-200'
+                  ? 'bg-zinc-950/60 border-zinc-800 hover:border-cyan-500/40 hover:bg-zinc-900/80 text-zinc-200'
                   : 'bg-zinc-950/30 border-zinc-900 text-zinc-500'
               }`}
             >
