@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { LearningRoadmap, LearningModule } from '@/lib/types';
 import { ROADMAP_SYSTEM_PROMPT } from '@/lib/prompts/roadmapPrompt';

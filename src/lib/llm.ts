@@ -49,6 +49,7 @@ export async function callLLM(systemPrompt: string, userPrompt: string): Promise
   // 2. Fallback to OpenAI API if OPENAI_API_KEY is present
   const res = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
+    cache: 'no-store',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${apiKey}`

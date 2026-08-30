@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { CODE_REVIEW_SYSTEM_PROMPT, formatCodeReviewUserPrompt, CodeReviewOutput } from '@/lib/prompts/codeReviewPrompt';
 import { callLLM, cleanAndParseJSON } from '@/lib/llm';

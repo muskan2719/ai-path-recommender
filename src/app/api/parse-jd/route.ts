@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { NextResponse } from 'next/server';
 import { JD_PARSER_SYSTEM_PROMPT, formatJDParserUserPrompt, JDParserOutput } from '@/lib/prompts/jdParserPrompt';
 import { callLLM, cleanAndParseJSON } from '@/lib/llm';
